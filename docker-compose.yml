@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mautic
+      MYSQL_USER: mautic
+      MYSQL_PASSWORD: mauticpass
+    volumes:
+      - db_data:/var/lib/mysql
+
+  mautic:
+    image: mautic/mautic:v5
+    depends_on:
+      - db
+    environment:
+      MAUTIC_DB_HOST: db
+      MAUTIC_DB_NAME: mautic
+      MAUTIC_DB_USER: mautic
+      MAUTIC_DB_PASSWORD: mauticpass
+      MAUTIC_RUN_CRON_JOBS: "true"
+    ports:
+      - "80:80"
+    volumes:
+      - mautic_data:/var/www/html
+
+volumes:
+  db_data:
+  mautic_data:
