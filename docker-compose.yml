@@ -3,6 +3,8 @@ version: "3.8"
 services:
   db:
     image: mysql:5.7
+    container_name: mautic-db
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: mautic
@@ -13,16 +15,18 @@ services:
 
   mautic:
     image: mautic/mautic:v5
+    container_name: mautic-app
     depends_on:
       - db
+    restart: always
+    ports:
+      - "8080:80"
     environment:
       MAUTIC_DB_HOST: db
       MAUTIC_DB_NAME: mautic
       MAUTIC_DB_USER: mautic
       MAUTIC_DB_PASSWORD: mauticpass
       MAUTIC_RUN_CRON_JOBS: "true"
-    ports:
-      - "80:80"
     volumes:
       - mautic_data:/var/www/html
 
